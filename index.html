@@ -534,6 +534,10 @@
           Restore
         </button>
 
+        <button onclick="mostrarEstatisticas()">
+          Statistics
+        </button>
+
       </div>
 
       <input
@@ -571,7 +575,7 @@
           class="organize-button"
           onclick="alternarOrganizar()"
         >
-          ORGANIZE
+          SORT
         </button>
 
       </div>
@@ -595,10 +599,6 @@
 
         <button onclick="mudarVisualizacao('list')">
           List view
-        </button>
-
-        <button onclick="mostrarEstatisticas()">
-          Statistics
         </button>
 
       </div>
@@ -1089,7 +1089,7 @@
 
 
   /* =========================
-     ORGANIZE
+     SORT
   ========================= */
 
   function alternarOrganizar() {
@@ -1595,6 +1595,8 @@
   ========================= */
 
   function mostrarEstatisticas() {
+
+    fecharAddMenu();
 
     document
       .getElementById(
