@@ -1,5 +1,4 @@
-
-const CACHE_NAME = "manhwa-library-v2";
+const CACHE_NAME = "manhwa-library-v3";
 
 const FILES_TO_CACHE = [
   "./",
