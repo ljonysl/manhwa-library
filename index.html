@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,10 +13,8 @@
 
   <link rel="manifest" href="./manifest.json">
 
-  <!-- iPhone Home Screen icon -->
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
 
-  <!-- Android / PWA icons -->
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
 
@@ -65,6 +62,10 @@
       letter-spacing: -0.5px;
     }
 
+    .add-area {
+      position: relative;
+    }
+
     .add-button {
       width: 34px;
       height: 34px;
@@ -78,6 +79,44 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
+    }
+
+    .add-menu {
+      display: none;
+      position: absolute;
+      top: 43px;
+      right: 0;
+      width: 180px;
+      background: #111;
+      border: 1px solid #292929;
+      border-radius: 10px;
+      overflow: hidden;
+      z-index: 50;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .add-menu.active {
+      display: block;
+    }
+
+    .add-menu button {
+      width: 100%;
+      padding: 14px;
+      text-align: left;
+      background: #111;
+      color: #fff;
+      border: 0;
+      border-bottom: 1px solid #222;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .add-menu button:last-child {
+      border-bottom: 0;
+    }
+
+    .add-menu button:active {
+      background: #222;
     }
 
     .content {
@@ -466,11 +505,47 @@
 <div class="app">
 
   <header>
-    <div class="logo">Manhwa Library</div>
 
-    <button class="add-button" onclick="abrirModal()">
-      +
-    </button>
+    <div class="logo">
+      Manhwa Library
+    </div>
+
+    <div class="add-area">
+
+      <button
+        class="add-button"
+        onclick="alternarAddMenu()"
+        aria-label="Menu"
+      >
+        +
+      </button>
+
+      <div id="addMenu" class="add-menu">
+
+        <button onclick="abrirAdicionar()">
+          Add Manhwa
+        </button>
+
+        <button onclick="fazerBackup()">
+          Backup
+        </button>
+
+        <button onclick="abrirRestore()">
+          Restore
+        </button>
+
+      </div>
+
+      <input
+        id="restoreInput"
+        type="file"
+        accept=".json,application/json"
+        style="display:none"
+        onchange="restaurarBackup(event)"
+      >
+
+    </div>
+
   </header>
 
   <!-- HOME -->
@@ -487,7 +562,10 @@
       >
 
       <div class="section-header">
-        <div class="section-title">Started</div>
+
+        <div class="section-title">
+          Started
+        </div>
 
         <button
           class="organize-button"
@@ -495,9 +573,13 @@
         >
           ORGANIZE
         </button>
+
       </div>
 
-      <div id="organizeMenu" class="organize-menu">
+      <div
+        id="organizeMenu"
+        class="organize-menu"
+      >
 
         <button onclick="ordenarAlfabeticamente()">
           Alphabetical order
@@ -535,9 +617,14 @@
   <div id="detailScreen" class="screen">
 
     <header>
-      <button class="back-button" onclick="voltarHome()">
+
+      <button
+        class="back-button"
+        onclick="voltarHome()"
+      >
         Back
       </button>
+
     </header>
 
     <main class="detail">
@@ -549,18 +636,37 @@
         alt=""
       >
 
-      <div id="detailTitle" class="detail-title"></div>
+      <div
+        id="detailTitle"
+        class="detail-title"
+      ></div>
 
       <div class="detail-info">
 
         <div class="info-row">
-          <span class="info-label">Chapters read</span>
-          <span id="detailChapters" class="info-value"></span>
+
+          <span class="info-label">
+            Chapters read
+          </span>
+
+          <span
+            id="detailChapters"
+            class="info-value"
+          ></span>
+
         </div>
 
         <div class="info-row">
-          <span class="info-label">Status</span>
-          <span id="detailStatus" class="info-value"></span>
+
+          <span class="info-label">
+            Status
+          </span>
+
+          <span
+            id="detailStatus"
+            class="info-value"
+          ></span>
+
         </div>
 
       </div>
@@ -591,9 +697,14 @@
   <div id="statsScreen" class="screen">
 
     <header>
-      <button class="back-button" onclick="voltarHome()">
+
+      <button
+        class="back-button"
+        onclick="voltarHome()"
+      >
         Back
       </button>
+
     </header>
 
     <main class="content">
@@ -605,16 +716,39 @@
       <div class="stats active">
 
         <div class="stat-box">
-          <div id="totalChapters" class="stat-number">0</div>
-          <div class="stat-label">Total chapters read</div>
+
+          <div
+            id="totalChapters"
+            class="stat-number"
+          >
+            0
+          </div>
+
+          <div class="stat-label">
+            Total chapters read
+          </div>
+
         </div>
 
         <div class="stat-box">
-          <div id="totalManhwas" class="stat-number">0</div>
-          <div class="stat-label">Total manhwas</div>
+
+          <div
+            id="totalManhwas"
+            class="stat-number"
+          >
+            0
+          </div>
+
+          <div class="stat-label">
+            Total manhwas
+          </div>
+
         </div>
 
-        <div id="chart" class="chart"></div>
+        <div
+          id="chart"
+          class="chart"
+        ></div>
 
       </div>
 
@@ -625,17 +759,25 @@
 </div>
 
 <!-- MODAL -->
-<div id="modalBackground" class="modal-background">
+<div
+  id="modalBackground"
+  class="modal-background"
+>
 
   <div class="modal">
 
-    <div id="modalTitle" class="modal-title">
+    <div
+      id="modalTitle"
+      class="modal-title"
+    >
       Add Manhwa
     </div>
 
     <div class="field">
 
-      <label>Name</label>
+      <label>
+        Name
+      </label>
 
       <input
         id="nameInput"
@@ -647,7 +789,9 @@
 
     <div class="field">
 
-      <label>Chapters read</label>
+      <label>
+        Chapters read
+      </label>
 
       <input
         id="chaptersInput"
@@ -660,7 +804,9 @@
 
     <div class="field">
 
-      <label>Status</label>
+      <label>
+        Status
+      </label>
 
       <select id="statusInput">
 
@@ -686,7 +832,9 @@
 
     <div class="field">
 
-      <label>Cover</label>
+      <label>
+        Cover
+      </label>
 
       <input
         id="coverInput"
@@ -735,6 +883,11 @@
   let manhwaAtual = null;
   let indiceEdicao = null;
 
+
+  /* =========================
+     SALVAR DADOS
+  ========================= */
+
   function salvarDados() {
 
     localStorage.setItem(
@@ -751,7 +904,45 @@
       "visualizacaoManhwas",
       visualizacaoManhwas
     );
+
   }
+
+
+  /* =========================
+     MENU DO +
+  ========================= */
+
+  function alternarAddMenu() {
+
+    const menu =
+      document.getElementById("addMenu");
+
+    menu.classList.toggle("active");
+
+  }
+
+
+  function fecharAddMenu() {
+
+    document
+      .getElementById("addMenu")
+      .classList.remove("active");
+
+  }
+
+
+  function abrirAdicionar() {
+
+    fecharAddMenu();
+
+    abrirModal();
+
+  }
+
+
+  /* =========================
+     RENDERIZAR
+  ========================= */
 
   function renderizar() {
 
@@ -762,24 +953,31 @@
       document.getElementById("empty");
 
     const busca =
-      document.getElementById("searchInput")
+      document
+        .getElementById("searchInput")
         .value
         .toLowerCase()
         .trim();
 
     let lista = [...manhwas];
 
-    if (ordemManhwas === "alphabetical") {
+    if (
+      ordemManhwas === "alphabetical"
+    ) {
 
       lista.sort((a, b) =>
         a.nome.localeCompare(
           b.nome,
           undefined,
-          { sensitivity: "base" }
+          {
+            sensitivity: "base"
+          }
         )
       );
 
-    } else if (ordemManhwas === "recent") {
+    } else if (
+      ordemManhwas === "recent"
+    ) {
 
       lista.reverse();
 
@@ -816,7 +1014,9 @@
         card.className = "card";
 
         card.onclick = function() {
+
           abrirDetalhes(index);
+
         };
 
         const img =
@@ -824,27 +1024,35 @@
 
         img.className = "cover";
 
-        img.src = m.capa || "";
+        img.src =
+          m.capa || "";
 
-        img.alt = m.nome;
+        img.alt =
+          m.nome;
 
         const name =
           document.createElement("div");
 
-        name.className = "card-name";
+        name.className =
+          "card-name";
 
-        name.textContent = m.nome;
+        name.textContent =
+          m.nome;
 
         const chapters =
           document.createElement("div");
 
-        chapters.className = "card-chapters";
+        chapters.className =
+          "card-chapters";
 
         chapters.textContent =
-          m.capitulos + " chapters";
+          m.capitulos +
+          " chapters";
 
         card.appendChild(img);
+
         card.appendChild(name);
+
         card.appendChild(chapters);
 
         library.appendChild(card);
@@ -853,24 +1061,43 @@
 
     }
 
-    if (visualizacaoManhwas === "list") {
+    if (
+      visualizacaoManhwas === "list"
+    ) {
 
-      library.classList.remove("grid");
-      library.classList.add("list-view");
+      library.classList.remove(
+        "grid"
+      );
+
+      library.classList.add(
+        "list-view"
+      );
 
     } else {
 
-      library.classList.remove("list-view");
-      library.classList.add("grid");
+      library.classList.remove(
+        "list-view"
+      );
+
+      library.classList.add(
+        "grid"
+      );
 
     }
 
   }
 
+
+  /* =========================
+     ORGANIZE
+  ========================= */
+
   function alternarOrganizar() {
 
     const menu =
-      document.getElementById("organizeMenu");
+      document.getElementById(
+        "organizeMenu"
+      );
 
     menu.style.display =
       menu.style.display === "block"
@@ -879,135 +1106,199 @@
 
   }
 
+
   function ordenarAlfabeticamente() {
 
-    ordemManhwas = "alphabetical";
+    ordemManhwas =
+      "alphabetical";
 
     salvarDados();
+
     renderizar();
 
   }
+
 
   function ordenarRecentemente() {
 
-    ordemManhwas = "recent";
+    ordemManhwas =
+      "recent";
 
     salvarDados();
+
     renderizar();
 
   }
+
 
   function mudarVisualizacao(tipo) {
 
-    visualizacaoManhwas = tipo;
+    visualizacaoManhwas =
+      tipo;
 
     salvarDados();
+
     renderizar();
 
   }
 
+
+  /* =========================
+     MODAL
+  ========================= */
+
   function abrirModal(indice = null) {
 
-    indiceEdicao = indice;
+    indiceEdicao =
+      indice;
 
     const modal =
-      document.getElementById("modalBackground");
+      document.getElementById(
+        "modalBackground"
+      );
 
     const title =
-      document.getElementById("modalTitle");
+      document.getElementById(
+        "modalTitle"
+      );
 
     const nameInput =
-      document.getElementById("nameInput");
+      document.getElementById(
+        "nameInput"
+      );
 
     const chaptersInput =
-      document.getElementById("chaptersInput");
+      document.getElementById(
+        "chaptersInput"
+      );
 
     const statusInput =
-      document.getElementById("statusInput");
+      document.getElementById(
+        "statusInput"
+      );
 
     const preview =
-      document.getElementById("coverPreview");
+      document.getElementById(
+        "coverPreview"
+      );
 
     if (indice !== null) {
 
-      const m = manhwas[indice];
+      const m =
+        manhwas[indice];
 
-      title.textContent = "Edit Manhwa";
+      title.textContent =
+        "Edit Manhwa";
 
-      nameInput.value = m.nome;
+      nameInput.value =
+        m.nome;
 
-      chaptersInput.value = m.capitulos;
+      chaptersInput.value =
+        m.capitulos;
 
-      statusInput.value = m.status;
+      statusInput.value =
+        m.status;
 
       if (m.capa) {
 
-        preview.src = m.capa;
+        preview.src =
+          m.capa;
 
-        preview.style.display = "block";
+        preview.style.display =
+          "block";
 
       } else {
 
-        preview.style.display = "none";
+        preview.style.display =
+          "none";
 
       }
 
     } else {
 
-      title.textContent = "Add Manhwa";
+      title.textContent =
+        "Add Manhwa";
 
-      nameInput.value = "";
+      nameInput.value =
+        "";
 
-      chaptersInput.value = 0;
+      chaptersInput.value =
+        0;
 
-      statusInput.value = "Reading";
+      statusInput.value =
+        "Reading";
 
-      preview.src = "";
+      preview.src =
+        "";
 
-      preview.style.display = "none";
+      preview.style.display =
+        "none";
 
     }
 
-    modal.classList.add("active");
+    modal.classList.add(
+      "active"
+    );
 
   }
+
 
   function fecharModal() {
 
     document
-      .getElementById("modalBackground")
-      .classList.remove("active");
+      .getElementById(
+        "modalBackground"
+      )
+      .classList.remove(
+        "active"
+      );
 
     document
-      .getElementById("coverInput")
+      .getElementById(
+        "coverInput"
+      )
       .value = "";
 
-    indiceEdicao = null;
+    indiceEdicao =
+      null;
 
   }
+
 
   function mostrarPreview() {
 
     const input =
-      document.getElementById("coverInput");
+      document.getElementById(
+        "coverInput"
+      );
 
     const preview =
-      document.getElementById("coverPreview");
+      document.getElementById(
+        "coverPreview"
+      );
 
-    if (!input.files || !input.files[0]) {
+    if (
+      !input.files ||
+      !input.files[0]
+    ) {
+
       return;
+
     }
 
     const reader =
       new FileReader();
 
-    reader.onload = function(e) {
+    reader.onload =
+      function(e) {
 
-      preview.src = e.target.result;
+        preview.src =
+          e.target.result;
 
-      preview.style.display = "block";
+        preview.style.display =
+          "block";
 
-    };
+      };
 
     reader.readAsDataURL(
       input.files[0]
@@ -1015,32 +1306,47 @@
 
   }
 
+
+  /* =========================
+     SALVAR MANHWA
+  ========================= */
+
   function salvarManhwa() {
 
     const nome =
       document
-        .getElementById("nameInput")
+        .getElementById(
+          "nameInput"
+        )
         .value
         .trim();
 
     const capitulos =
       Number(
         document
-          .getElementById("chaptersInput")
+          .getElementById(
+            "chaptersInput"
+          )
           .value || 0
       );
 
     const status =
       document
-        .getElementById("statusInput")
+        .getElementById(
+          "statusInput"
+        )
         .value;
 
     const coverInput =
-      document.getElementById("coverInput");
+      document.getElementById(
+        "coverInput"
+      );
 
     if (!nome) {
 
-      alert("Enter the manhwa name.");
+      alert(
+        "Enter the manhwa name."
+      );
 
       return;
 
@@ -1049,15 +1355,27 @@
     function finalizar(capa) {
 
       const novoManhwa = {
+
         nome: nome,
-        capitulos: capitulos,
-        status: status,
-        capa: capa
+
+        capitulos:
+          capitulos,
+
+        status:
+          status,
+
+        capa:
+          capa
+
       };
 
-      if (indiceEdicao !== null) {
+      if (
+        indiceEdicao !== null
+      ) {
 
-        manhwas[indiceEdicao] =
+        manhwas[
+          indiceEdicao
+        ] =
           novoManhwa;
 
       } else {
@@ -1084,13 +1402,14 @@
       const reader =
         new FileReader();
 
-      reader.onload = function(e) {
+      reader.onload =
+        function(e) {
 
-        finalizar(
-          e.target.result
-        );
+          finalizar(
+            e.target.result
+          );
 
-      };
+        };
 
       reader.readAsDataURL(
         coverInput.files[0]
@@ -1101,7 +1420,9 @@
     ) {
 
       finalizar(
-        manhwas[indiceEdicao].capa || ""
+        manhwas[
+          indiceEdicao
+        ].capa || ""
       );
 
     } else {
@@ -1112,67 +1433,118 @@
 
   }
 
+
+  /* =========================
+     DETALHES
+  ========================= */
+
   function abrirDetalhes(indice) {
 
-    manhwaAtual = indice;
+    manhwaAtual =
+      indice;
 
     const m =
       manhwas[indice];
 
     document
-      .getElementById("detailCover")
-      .src = m.capa || "";
+      .getElementById(
+        "detailCover"
+      )
+      .src =
+      m.capa || "";
 
     document
-      .getElementById("detailTitle")
-      .textContent = m.nome;
+      .getElementById(
+        "detailTitle"
+      )
+      .textContent =
+      m.nome;
 
     document
-      .getElementById("detailChapters")
-      .textContent = m.capitulos;
+      .getElementById(
+        "detailChapters"
+      )
+      .textContent =
+      m.capitulos;
 
     document
-      .getElementById("detailStatus")
-      .textContent = m.status;
+      .getElementById(
+        "detailStatus"
+      )
+      .textContent =
+      m.status;
 
     document
-      .getElementById("homeScreen")
-      .classList.remove("active");
+      .getElementById(
+        "homeScreen"
+      )
+      .classList.remove(
+        "active"
+      );
 
     document
-      .getElementById("statsScreen")
-      .classList.remove("active");
+      .getElementById(
+        "statsScreen"
+      )
+      .classList.remove(
+        "active"
+      );
 
     document
-      .getElementById("detailScreen")
-      .classList.add("active");
+      .getElementById(
+        "detailScreen"
+      )
+      .classList.add(
+        "active"
+      );
 
-    window.scrollTo(0, 0);
+    window.scrollTo(
+      0,
+      0
+    );
 
   }
+
 
   function voltarHome() {
 
     document
-      .getElementById("detailScreen")
-      .classList.remove("active");
+      .getElementById(
+        "detailScreen"
+      )
+      .classList.remove(
+        "active"
+      );
 
     document
-      .getElementById("statsScreen")
-      .classList.remove("active");
+      .getElementById(
+        "statsScreen"
+      )
+      .classList.remove(
+        "active"
+      );
 
     document
-      .getElementById("homeScreen")
-      .classList.add("active");
+      .getElementById(
+        "homeScreen"
+      )
+      .classList.add(
+        "active"
+      );
 
     renderizar();
 
   }
 
+
   function editarAtual() {
 
-    if (manhwaAtual === null) {
+    if (
+      manhwaAtual === null
+    ) {
+
       return;
+
     }
 
     abrirModal(
@@ -1181,10 +1553,15 @@
 
   }
 
+
   function excluirAtual() {
 
-    if (manhwaAtual === null) {
+    if (
+      manhwaAtual === null
+    ) {
+
       return;
+
     }
 
     const confirmar =
@@ -1193,7 +1570,9 @@
       );
 
     if (!confirmar) {
+
       return;
+
     }
 
     manhwas.splice(
@@ -1203,111 +1582,395 @@
 
     salvarDados();
 
-    manhwaAtual = null;
+    manhwaAtual =
+      null;
 
     voltarHome();
 
   }
 
+
+  /* =========================
+     ESTATÍSTICAS
+  ========================= */
+
   function mostrarEstatisticas() {
 
     document
-      .getElementById("organizeMenu")
-      .style.display = "none";
+      .getElementById(
+        "organizeMenu"
+      )
+      .style.display =
+      "none";
 
     const total =
       manhwas.reduce(
         (soma, m) =>
-          soma + Number(m.capitulos || 0),
+          soma +
+          Number(
+            m.capitulos || 0
+          ),
         0
       );
 
     document
-      .getElementById("totalChapters")
-      .textContent = total;
+      .getElementById(
+        "totalChapters"
+      )
+      .textContent =
+      total;
 
     document
-      .getElementById("totalManhwas")
+      .getElementById(
+        "totalManhwas"
+      )
       .textContent =
-        manhwas.length;
+      manhwas.length;
 
     const chart =
-      document.getElementById("chart");
+      document.getElementById(
+        "chart"
+      );
 
-    chart.innerHTML = "";
+    chart.innerHTML =
+      "";
 
     const maior =
       Math.max(
         ...manhwas.map(
-          m => Number(m.capitulos || 0)
+          m =>
+            Number(
+              m.capitulos || 0
+            )
         ),
         1
       );
 
-    manhwas.forEach(m => {
+    manhwas.forEach(
+      m => {
 
-      const row =
-        document.createElement("div");
+        const row =
+          document.createElement(
+            "div"
+          );
 
-      row.className =
-        "chart-row";
+        row.className =
+          "chart-row";
 
-      const name =
-        document.createElement("div");
+        const name =
+          document.createElement(
+            "div"
+          );
 
-      name.className =
-        "chart-name";
+        name.className =
+          "chart-name";
 
-      name.textContent =
-        m.nome;
+        name.textContent =
+          m.nome;
 
-      const background =
-        document.createElement("div");
+        const background =
+          document.createElement(
+            "div"
+          );
 
-      background.className =
-        "bar-background";
+        background.className =
+          "bar-background";
 
-      const bar =
-        document.createElement("div");
+        const bar =
+          document.createElement(
+            "div"
+          );
 
-      bar.className =
-        "bar";
+        bar.className =
+          "bar";
 
-      bar.style.width =
-        (
-          Number(m.capitulos || 0)
-          / maior
-          * 100
-        ) + "%";
+        bar.style.width =
+          (
+            Number(
+              m.capitulos || 0
+            )
+            /
+            maior
+            *
+            100
+          ) +
+          "%";
 
-      background.appendChild(bar);
+        background.appendChild(
+          bar
+        );
 
-      row.appendChild(name);
-      row.appendChild(background);
+        row.appendChild(
+          name
+        );
 
-      chart.appendChild(row);
+        row.appendChild(
+          background
+        );
 
-    });
+        chart.appendChild(
+          row
+        );
+
+      }
+    );
 
     document
-      .getElementById("homeScreen")
-      .classList.remove("active");
+      .getElementById(
+        "homeScreen"
+      )
+      .classList.remove(
+        "active"
+      );
 
     document
-      .getElementById("detailScreen")
-      .classList.remove("active");
+      .getElementById(
+        "detailScreen"
+      )
+      .classList.remove(
+        "active"
+      );
 
     document
-      .getElementById("statsScreen")
-      .classList.add("active");
+      .getElementById(
+        "statsScreen"
+      )
+      .classList.add(
+        "active"
+      );
 
-    window.scrollTo(0, 0);
+    window.scrollTo(
+      0,
+      0
+    );
 
   }
 
+
+  /* =========================
+     BACKUP
+  ========================= */
+
+  function fazerBackup() {
+
+    fecharAddMenu();
+
+    const dadosBackup = {
+
+      versao: 1,
+
+      data:
+        new Date().toISOString(),
+
+      manhwas:
+        manhwas,
+
+      ordemManhwas:
+        ordemManhwas,
+
+      visualizacaoManhwas:
+        visualizacaoManhwas
+
+    };
+
+    const texto =
+      JSON.stringify(
+        dadosBackup,
+        null,
+        2
+      );
+
+    const blob =
+      new Blob(
+        [texto],
+        {
+          type:
+            "application/json"
+        }
+      );
+
+    const url =
+      URL.createObjectURL(
+        blob
+      );
+
+    const link =
+      document.createElement(
+        "a"
+      );
+
+    link.href =
+      url;
+
+    link.download =
+      "manhwa-library-backup.json";
+
+    document.body.appendChild(
+      link
+    );
+
+    link.click();
+
+    document.body.removeChild(
+      link
+    );
+
+    URL.revokeObjectURL(
+      url
+    );
+
+    alert(
+      "Backup created successfully."
+    );
+
+  }
+
+
+  /* =========================
+     RESTORE
+  ========================= */
+
+  function abrirRestore() {
+
+    fecharAddMenu();
+
+    const input =
+      document.getElementById(
+        "restoreInput"
+      );
+
+    input.value =
+      "";
+
+    input.click();
+
+  }
+
+
+  function restaurarBackup(event) {
+
+    const arquivo =
+      event.target.files[0];
+
+    if (!arquivo) {
+
+      return;
+
+    }
+
+    const reader =
+      new FileReader();
+
+    reader.onload =
+      function(e) {
+
+        try {
+
+          const dados =
+            JSON.parse(
+              e.target.result
+            );
+
+          if (
+            !dados ||
+            !Array.isArray(
+              dados.manhwas
+            )
+          ) {
+
+            alert(
+              "Invalid backup file."
+            );
+
+            return;
+
+          }
+
+          const confirmar =
+            confirm(
+              "Restore this backup? Your current data will be replaced."
+            );
+
+          if (!confirmar) {
+
+            return;
+
+          }
+
+          manhwas =
+            dados.manhwas;
+
+          ordemManhwas =
+            dados.ordemManhwas ||
+            "original";
+
+          visualizacaoManhwas =
+            dados.visualizacaoManhwas ||
+            "grid";
+
+          salvarDados();
+
+          renderizar();
+
+          alert(
+            "Backup restored successfully."
+          );
+
+        } catch (erro) {
+
+          alert(
+            "Could not read the backup file."
+          );
+
+        }
+
+      };
+
+    reader.readAsText(
+      arquivo
+    );
+
+  }
+
+
+  /* =========================
+     FECHAR MENU AO CLICAR FORA
+  ========================= */
+
+  document.addEventListener(
+    "click",
+    function(event) {
+
+      const area =
+        document.querySelector(
+          ".add-area"
+        );
+
+      if (
+        area &&
+        !area.contains(
+          event.target
+        )
+      ) {
+
+        fecharAddMenu();
+
+      }
+
+    }
+  );
+
+
+  /* =========================
+     INICIALIZAÇÃO
+  ========================= */
+
   renderizar();
 
-  if ("serviceWorker" in navigator) {
+
+  if (
+    "serviceWorker" in navigator
+  ) {
 
     window.addEventListener(
       "load",
@@ -1317,21 +1980,25 @@
           .register(
             "./service-worker.js"
           )
-          .then(function() {
+          .then(
+            function() {
 
-            console.log(
-              "Service Worker registered."
-            );
+              console.log(
+                "Service Worker registered."
+              );
 
-          })
-          .catch(function(error) {
+            }
+          )
+          .catch(
+            function(error) {
 
-            console.log(
-              "Service Worker registration failed:",
-              error
-            );
+              console.log(
+                "Service Worker registration failed:",
+                error
+              );
 
-          });
+            }
+          );
 
       }
     );
