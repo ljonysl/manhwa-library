@@ -141,16 +141,47 @@
       color: #777;
     }
 
+    /* =========================
+       STARTED HEADER
+    ========================= */
+
     .section-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 12px;
+      gap: 10px;
+    }
+
+    .section-left {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
     }
 
     .section-title {
       font-size: 17px;
       font-weight: 700;
+    }
+
+    .status-filter {
+      height: 29px;
+      min-width: 76px;
+      background: #111;
+      border: 1px solid #2b2b2b;
+      border-radius: 7px;
+      color: #aaa;
+      padding: 0 25px 0 9px;
+      font-size: 11px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .status-filter:focus {
+      border-color: #444;
+      color: #fff;
     }
 
     .organize-button {
@@ -161,7 +192,16 @@
       font-weight: 600;
       cursor: pointer;
       padding: 5px 0;
+      flex-shrink: 0;
     }
+
+    .organize-button:active {
+      color: #fff;
+    }
+
+    /* =========================
+       SORT MENU
+    ========================= */
 
     .organize-menu {
       display: none;
@@ -182,6 +222,11 @@
       border-bottom: 1px solid #222;
       cursor: pointer;
       font-size: 14px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
     }
 
     .organize-menu button:last-child {
@@ -191,6 +236,29 @@
     .organize-menu button:active {
       background: #222;
     }
+
+    .organize-menu button.active-sort {
+      background: #1c1c1c;
+      color: #fff;
+    }
+
+    .sort-indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid #555;
+      flex-shrink: 0;
+    }
+
+    .organize-menu button.active-sort .sort-indicator {
+      background: #fff;
+      border-color: #fff;
+    }
+
+    /* =========================
+       GRID
+    ========================= */
 
     .grid {
       display: grid;
@@ -263,6 +331,10 @@
       font-size: 14px;
     }
 
+    /* =========================
+       SCREENS
+    ========================= */
+
     .screen {
       display: none;
       min-height: calc(100vh - 58px);
@@ -280,6 +352,10 @@
       padding: 0;
       cursor: pointer;
     }
+
+    /* =========================
+       DETAILS
+    ========================= */
 
     .detail {
       padding: 24px 16px 40px;
@@ -351,6 +427,10 @@
     .action-button.delete {
       color: #aaa;
     }
+
+    /* =========================
+       MODAL
+    ========================= */
 
     .modal-background {
       display: none;
@@ -431,6 +511,10 @@
       cursor: pointer;
     }
 
+    /* =========================
+       STATISTICS
+    ========================= */
+
     .stats {
       display: none;
       padding: 20px 0 40px;
@@ -489,6 +573,7 @@
     }
 
     @media (min-width: 700px) {
+
       .content {
         padding: 22px;
       }
@@ -496,6 +581,7 @@
       .grid {
         gap: 12px;
       }
+
     }
   </style>
 </head>
@@ -567,8 +653,32 @@
 
       <div class="section-header">
 
-        <div class="section-title">
-          Started
+        <div class="section-left">
+
+          <div class="section-title">
+            Started
+          </div>
+
+          <select
+            id="statusFilter"
+            class="status-filter"
+            onchange="mudarFiltroStatus(this.value)"
+          >
+
+            <option value="all">
+              All
+            </option>
+
+            <option value="Reading">
+              Reading
+            </option>
+
+            <option value="Completed">
+              Read
+            </option>
+
+          </select>
+
         </div>
 
         <button
@@ -585,20 +695,56 @@
         class="organize-menu"
       >
 
-        <button onclick="ordenarAlfabeticamente()">
-          Alphabetical order
+        <button
+          id="sortAlphabetical"
+          onclick="ordenarAlfabeticamente()"
+        >
+
+          <span>
+            Alphabetical order
+          </span>
+
+          <span class="sort-indicator"></span>
+
         </button>
 
-        <button onclick="ordenarRecentemente()">
-          Recently added
+        <button
+          id="sortRecent"
+          onclick="ordenarRecentemente()"
+        >
+
+          <span>
+            Recently added
+          </span>
+
+          <span class="sort-indicator"></span>
+
         </button>
 
-        <button onclick="mudarVisualizacao('grid')">
-          Grid view
+        <button
+          id="sortGrid"
+          onclick="mudarVisualizacao('grid')"
+        >
+
+          <span>
+            Grid view
+          </span>
+
+          <span class="sort-indicator"></span>
+
         </button>
 
-        <button onclick="mudarVisualizacao('list')">
-          List view
+        <button
+          id="sortList"
+          onclick="mudarVisualizacao('list')"
+        >
+
+          <span>
+            List view
+          </span>
+
+          <span class="sort-indicator"></span>
+
         </button>
 
       </div>
@@ -880,6 +1026,9 @@
   let visualizacaoManhwas =
     localStorage.getItem("visualizacaoManhwas") || "grid";
 
+  let filtroStatus =
+    localStorage.getItem("filtroStatus") || "all";
+
   let manhwaAtual = null;
   let indiceEdicao = null;
 
@@ -903,6 +1052,11 @@
     localStorage.setItem(
       "visualizacaoManhwas",
       visualizacaoManhwas
+    );
+
+    localStorage.setItem(
+      "filtroStatus",
+      filtroStatus
     );
 
   }
@@ -941,6 +1095,22 @@
 
 
   /* =========================
+     FILTRO DE STATUS
+  ========================= */
+
+  function mudarFiltroStatus(status) {
+
+    filtroStatus =
+      status;
+
+    salvarDados();
+
+    renderizar();
+
+  }
+
+
+  /* =========================
      RENDERIZAR
   ========================= */
 
@@ -952,14 +1122,40 @@
     const empty =
       document.getElementById("empty");
 
+    const searchElement =
+      document.getElementById("searchInput");
+
+    const filterElement =
+      document.getElementById("statusFilter");
+
     const busca =
-      document
-        .getElementById("searchInput")
-        .value
-        .toLowerCase()
-        .trim();
+      searchElement
+        ? searchElement.value.toLowerCase().trim()
+        : "";
+
+    if (filterElement) {
+
+      filterElement.value =
+        filtroStatus;
+
+    }
 
     let lista = [...manhwas];
+
+
+    /* FILTRO */
+
+    if (filtroStatus !== "all") {
+
+      lista =
+        lista.filter(m =>
+          m.status === filtroStatus
+        );
+
+    }
+
+
+    /* ORDENAÇÃO */
 
     if (
       ordemManhwas === "alphabetical"
@@ -983,25 +1179,33 @@
 
     }
 
+
+    /* PESQUISA */
+
     if (busca) {
 
-      lista = lista.filter(m =>
-        m.nome
-          .toLowerCase()
-          .includes(busca)
-      );
+      lista =
+        lista.filter(m =>
+          m.nome
+            .toLowerCase()
+            .includes(busca)
+        );
 
     }
 
+
     library.innerHTML = "";
+
 
     if (lista.length === 0) {
 
-      empty.style.display = "block";
+      empty.style.display =
+        "block";
 
     } else {
 
-      empty.style.display = "none";
+      empty.style.display =
+        "none";
 
       lista.forEach((m) => {
 
@@ -1011,24 +1215,29 @@
         const card =
           document.createElement("div");
 
-        card.className = "card";
+        card.className =
+          "card";
 
-        card.onclick = function() {
+        card.onclick =
+          function() {
 
-          abrirDetalhes(index);
+            abrirDetalhes(index);
 
-        };
+          };
+
 
         const img =
           document.createElement("img");
 
-        img.className = "cover";
+        img.className =
+          "cover";
 
         img.src =
           m.capa || "";
 
         img.alt =
           m.nome;
+
 
         const name =
           document.createElement("div");
@@ -1039,6 +1248,7 @@
         name.textContent =
           m.nome;
 
+
         const chapters =
           document.createElement("div");
 
@@ -1048,6 +1258,7 @@
         chapters.textContent =
           m.capitulos +
           " chapters";
+
 
         card.appendChild(img);
 
@@ -1060,6 +1271,9 @@
       });
 
     }
+
+
+    /* VISUALIZAÇÃO */
 
     if (
       visualizacaoManhwas === "list"
@@ -1085,6 +1299,78 @@
 
     }
 
+
+    atualizarDestaquesSort();
+
+  }
+
+
+  /* =========================
+     DESTAQUES DO SORT
+  ========================= */
+
+  function atualizarDestaquesSort() {
+
+    const alphabetical =
+      document.getElementById(
+        "sortAlphabetical"
+      );
+
+    const recent =
+      document.getElementById(
+        "sortRecent"
+      );
+
+    const grid =
+      document.getElementById(
+        "sortGrid"
+      );
+
+    const list =
+      document.getElementById(
+        "sortList"
+      );
+
+
+    if (alphabetical) {
+
+      alphabetical.classList.toggle(
+        "active-sort",
+        ordemManhwas === "alphabetical"
+      );
+
+    }
+
+
+    if (recent) {
+
+      recent.classList.toggle(
+        "active-sort",
+        ordemManhwas === "recent"
+      );
+
+    }
+
+
+    if (grid) {
+
+      grid.classList.toggle(
+        "active-sort",
+        visualizacaoManhwas === "grid"
+      );
+
+    }
+
+
+    if (list) {
+
+      list.classList.toggle(
+        "active-sort",
+        visualizacaoManhwas === "list"
+      );
+
+    }
+
   }
 
 
@@ -1103,6 +1389,8 @@
       menu.style.display === "block"
         ? "none"
         : "block";
+
+    atualizarDestaquesSort();
 
   }
 
@@ -1182,6 +1470,7 @@
         "coverPreview"
       );
 
+
     if (indice !== null) {
 
       const m =
@@ -1198,6 +1487,7 @@
 
       statusInput.value =
         m.status;
+
 
       if (m.capa) {
 
@@ -1235,6 +1525,7 @@
         "none";
 
     }
+
 
     modal.classList.add(
       "active"
@@ -1277,6 +1568,7 @@
         "coverPreview"
       );
 
+
     if (
       !input.files ||
       !input.files[0]
@@ -1286,8 +1578,10 @@
 
     }
 
+
     const reader =
       new FileReader();
+
 
     reader.onload =
       function(e) {
@@ -1299,6 +1593,7 @@
           "block";
 
       };
+
 
     reader.readAsDataURL(
       input.files[0]
@@ -1321,6 +1616,7 @@
         .value
         .trim();
 
+
     const capitulos =
       Number(
         document
@@ -1330,6 +1626,7 @@
           .value || 0
       );
 
+
     const status =
       document
         .getElementById(
@@ -1337,10 +1634,12 @@
         )
         .value;
 
+
     const coverInput =
       document.getElementById(
         "coverInput"
       );
+
 
     if (!nome) {
 
@@ -1352,11 +1651,13 @@
 
     }
 
+
     function finalizar(capa) {
 
       const novoManhwa = {
 
-        nome: nome,
+        nome:
+          nome,
 
         capitulos:
           capitulos,
@@ -1368,6 +1669,7 @@
           capa
 
       };
+
 
       if (
         indiceEdicao !== null
@@ -1386,6 +1688,7 @@
 
       }
 
+
       salvarDados();
 
       fecharModal();
@@ -1394,6 +1697,7 @@
 
     }
 
+
     if (
       coverInput.files &&
       coverInput.files[0]
@@ -1401,6 +1705,7 @@
 
       const reader =
         new FileReader();
+
 
       reader.onload =
         function(e) {
@@ -1411,9 +1716,11 @@
 
         };
 
+
       reader.readAsDataURL(
         coverInput.files[0]
       );
+
 
     } else if (
       indiceEdicao !== null
@@ -1424,6 +1731,7 @@
           indiceEdicao
         ].capa || ""
       );
+
 
     } else {
 
@@ -1446,12 +1754,14 @@
     const m =
       manhwas[indice];
 
+
     document
       .getElementById(
         "detailCover"
       )
       .src =
       m.capa || "";
+
 
     document
       .getElementById(
@@ -1460,6 +1770,7 @@
       .textContent =
       m.nome;
 
+
     document
       .getElementById(
         "detailChapters"
@@ -1467,12 +1778,14 @@
       .textContent =
       m.capitulos;
 
+
     document
       .getElementById(
         "detailStatus"
       )
       .textContent =
       m.status;
+
 
     document
       .getElementById(
@@ -1482,6 +1795,7 @@
         "active"
       );
 
+
     document
       .getElementById(
         "statsScreen"
@@ -1490,6 +1804,7 @@
         "active"
       );
 
+
     document
       .getElementById(
         "detailScreen"
@@ -1497,6 +1812,7 @@
       .classList.add(
         "active"
       );
+
 
     window.scrollTo(
       0,
@@ -1516,6 +1832,7 @@
         "active"
       );
 
+
     document
       .getElementById(
         "statsScreen"
@@ -1524,6 +1841,7 @@
         "active"
       );
 
+
     document
       .getElementById(
         "homeScreen"
@@ -1531,6 +1849,7 @@
       .classList.add(
         "active"
       );
+
 
     renderizar();
 
@@ -1564,10 +1883,12 @@
 
     }
 
+
     const confirmar =
       confirm(
         "Delete this manhwa?"
       );
+
 
     if (!confirmar) {
 
@@ -1575,15 +1896,19 @@
 
     }
 
+
     manhwas.splice(
       manhwaAtual,
       1
     );
 
+
     salvarDados();
+
 
     manhwaAtual =
       null;
+
 
     voltarHome();
 
@@ -1605,6 +1930,7 @@
       .style.display =
       "none";
 
+
     const total =
       manhwas.reduce(
         (soma, m) =>
@@ -1615,12 +1941,14 @@
         0
       );
 
+
     document
       .getElementById(
         "totalChapters"
       )
       .textContent =
       total;
+
 
     document
       .getElementById(
@@ -1629,13 +1957,16 @@
       .textContent =
       manhwas.length;
 
+
     const chart =
       document.getElementById(
         "chart"
       );
 
+
     chart.innerHTML =
       "";
+
 
     const maior =
       Math.max(
@@ -1648,6 +1979,7 @@
         1
       );
 
+
     manhwas.forEach(
       m => {
 
@@ -1658,6 +1990,7 @@
 
         row.className =
           "chart-row";
+
 
         const name =
           document.createElement(
@@ -1670,6 +2003,7 @@
         name.textContent =
           m.nome;
 
+
         const background =
           document.createElement(
             "div"
@@ -1678,6 +2012,7 @@
         background.className =
           "bar-background";
 
+
         const bar =
           document.createElement(
             "div"
@@ -1685,6 +2020,7 @@
 
         bar.className =
           "bar";
+
 
         bar.style.width =
           (
@@ -1698,9 +2034,11 @@
           ) +
           "%";
 
+
         background.appendChild(
           bar
         );
+
 
         row.appendChild(
           name
@@ -1710,12 +2048,14 @@
           background
         );
 
+
         chart.appendChild(
           row
         );
 
       }
     );
+
 
     document
       .getElementById(
@@ -1725,6 +2065,7 @@
         "active"
       );
 
+
     document
       .getElementById(
         "detailScreen"
@@ -1733,6 +2074,7 @@
         "active"
       );
 
+
     document
       .getElementById(
         "statsScreen"
@@ -1740,6 +2082,7 @@
       .classList.add(
         "active"
       );
+
 
     window.scrollTo(
       0,
@@ -1757,9 +2100,11 @@
 
     fecharAddMenu();
 
+
     const dadosBackup = {
 
-      versao: 1,
+      versao:
+        1,
 
       data:
         new Date().toISOString(),
@@ -1771,9 +2116,13 @@
         ordemManhwas,
 
       visualizacaoManhwas:
-        visualizacaoManhwas
+        visualizacaoManhwas,
+
+      filtroStatus:
+        filtroStatus
 
     };
+
 
     const texto =
       JSON.stringify(
@@ -1781,6 +2130,7 @@
         null,
         2
       );
+
 
     const blob =
       new Blob(
@@ -1791,35 +2141,44 @@
         }
       );
 
+
     const url =
       URL.createObjectURL(
         blob
       );
+
 
     const link =
       document.createElement(
         "a"
       );
 
+
     link.href =
       url;
 
+
     link.download =
       "manhwa-library-backup.json";
+
 
     document.body.appendChild(
       link
     );
 
+
     link.click();
+
 
     document.body.removeChild(
       link
     );
 
+
     URL.revokeObjectURL(
       url
     );
+
 
     alert(
       "Backup created successfully."
@@ -1836,13 +2195,16 @@
 
     fecharAddMenu();
 
+
     const input =
       document.getElementById(
         "restoreInput"
       );
 
+
     input.value =
       "";
+
 
     input.click();
 
@@ -1854,14 +2216,17 @@
     const arquivo =
       event.target.files[0];
 
+
     if (!arquivo) {
 
       return;
 
     }
 
+
     const reader =
       new FileReader();
+
 
     reader.onload =
       function(e) {
@@ -1872,6 +2237,7 @@
             JSON.parse(
               e.target.result
             );
+
 
           if (
             !dados ||
@@ -1888,10 +2254,12 @@
 
           }
 
+
           const confirmar =
             confirm(
               "Restore this backup? Your current data will be replaced."
             );
+
 
           if (!confirmar) {
 
@@ -1899,24 +2267,35 @@
 
           }
 
+
           manhwas =
             dados.manhwas;
+
 
           ordemManhwas =
             dados.ordemManhwas ||
             "original";
 
+
           visualizacaoManhwas =
             dados.visualizacaoManhwas ||
             "grid";
+
+
+          filtroStatus =
+            dados.filtroStatus ||
+            "all";
+
 
           salvarDados();
 
           renderizar();
 
+
           alert(
             "Backup restored successfully."
           );
+
 
         } catch (erro) {
 
@@ -1927,6 +2306,7 @@
         }
 
       };
+
 
     reader.readAsText(
       arquivo
@@ -1947,6 +2327,7 @@
         document.querySelector(
           ".add-area"
         );
+
 
       if (
         area &&
