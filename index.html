@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
 
   <title>Manhwa Library</title>
 
@@ -13,12 +17,38 @@
 
   <link rel="manifest" href="./manifest.json">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link
+    rel="apple-touch-icon"
+    sizes="180x180"
+    href="./apple-touch-icon.png"
+  >
 
-  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="192x192"
+    href="./icon-192.png"
+  >
+
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="512x512"
+    href="./icon-512.png"
+  >
 
   <style>
+
+    /* =========================
+       CONTROLE DE TOQUE
+    ========================= */
+
+    html {
+      touch-action: manipulation;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
@@ -28,8 +58,43 @@
       margin: 0;
       background: #000;
       color: #fff;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
-        "Helvetica Neue", Arial, sans-serif;
+
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+
+      touch-action: manipulation;
+      overscroll-behavior: none;
+
+      -webkit-user-select: none;
+      user-select: none;
+
+      -webkit-touch-callout: none;
+    }
+
+    /*
+      Permite selecionar/digitar normalmente
+      nos campos de texto.
+    */
+
+    input,
+    textarea,
+    select {
+      -webkit-user-select: text;
+      user-select: text;
+    }
+
+    /*
+      Impede arrastar imagens como no navegador.
+    */
+
+    img {
+      -webkit-user-drag: none;
+      user-drag: none;
     }
 
     button,
@@ -38,21 +103,40 @@
       font: inherit;
     }
 
+    button {
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    /* =========================
+       APP
+    ========================= */
+
     .app {
       min-height: 100vh;
       background: #000;
     }
 
+    /* =========================
+       HEADER
+    ========================= */
+
     header {
       height: 58px;
+
       display: flex;
       align-items: center;
       justify-content: space-between;
+
       padding: 0 18px;
+
       border-bottom: 1px solid #1c1c1c;
+
       position: sticky;
       top: 0;
+
       z-index: 20;
+
       background: #000;
     }
 
@@ -62,6 +146,10 @@
       letter-spacing: -0.5px;
     }
 
+    /* =========================
+       MENU +
+    ========================= */
+
     .add-area {
       position: relative;
     }
@@ -69,30 +157,47 @@
     .add-button {
       width: 34px;
       height: 34px;
+
       border: 1px solid #333;
       border-radius: 50%;
+
       background: #111;
       color: #fff;
+
       font-size: 24px;
       line-height: 30px;
+
       display: flex;
       align-items: center;
       justify-content: center;
+
       cursor: pointer;
+
+      touch-action: manipulation;
     }
 
     .add-menu {
       display: none;
+
       position: absolute;
+
       top: 43px;
       right: 0;
+
       width: 180px;
+
       background: #111;
+
       border: 1px solid #292929;
       border-radius: 10px;
+
       overflow: hidden;
+
       z-index: 50;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+      box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.5);
     }
 
     .add-menu.active {
@@ -101,13 +206,19 @@
 
     .add-menu button {
       width: 100%;
+
       padding: 14px;
+
       text-align: left;
+
       background: #111;
       color: #fff;
+
       border: 0;
       border-bottom: 1px solid #222;
+
       cursor: pointer;
+
       font-size: 14px;
     }
 
@@ -119,22 +230,41 @@
       background: #222;
     }
 
+    /* =========================
+       CONTENT
+    ========================= */
+
     .content {
       padding: 16px;
+
       max-width: 900px;
+
       margin: 0 auto;
     }
+
+    /* =========================
+       SEARCH
+    ========================= */
 
     .search {
       width: 100%;
       height: 42px;
+
       background: #111;
+
       border: 1px solid #222;
       border-radius: 10px;
+
       color: #fff;
+
       padding: 0 14px;
+
       outline: none;
+
       margin-bottom: 18px;
+
+      -webkit-user-select: text;
+      user-select: text;
     }
 
     .search::placeholder {
@@ -147,16 +277,22 @@
 
     .section-header {
       display: flex;
+
       align-items: center;
       justify-content: space-between;
+
       margin-bottom: 12px;
+
       gap: 10px;
     }
 
     .section-left {
       display: flex;
+
       align-items: center;
+
       gap: 9px;
+
       min-width: 0;
     }
 
@@ -165,17 +301,29 @@
       font-weight: 700;
     }
 
+    /* =========================
+       STATUS FILTER
+    ========================= */
+
     .status-filter {
       height: 29px;
+
       min-width: 76px;
+
       background: #111;
+
       border: 1px solid #2b2b2b;
       border-radius: 7px;
+
       color: #aaa;
+
       padding: 0 25px 0 9px;
+
       font-size: 11px;
       font-weight: 600;
+
       outline: none;
+
       cursor: pointer;
     }
 
@@ -184,14 +332,24 @@
       color: #fff;
     }
 
+    /* =========================
+       SORT BUTTON
+    ========================= */
+
     .organize-button {
       background: transparent;
+
       border: 0;
+
       color: #aaa;
+
       font-size: 12px;
       font-weight: 600;
+
       cursor: pointer;
+
       padding: 5px 0;
+
       flex-shrink: 0;
     }
 
@@ -205,27 +363,40 @@
 
     .organize-menu {
       display: none;
+
       background: #111;
+
       border: 1px solid #292929;
+
       border-radius: 10px;
+
       overflow: hidden;
+
       margin-bottom: 14px;
     }
 
     .organize-menu button {
       width: 100%;
+
       padding: 13px 14px;
+
       text-align: left;
+
       background: #111;
       color: #fff;
+
       border: 0;
       border-bottom: 1px solid #222;
+
       cursor: pointer;
+
       font-size: 14px;
 
       display: flex;
+
       align-items: center;
       justify-content: space-between;
+
       gap: 10px;
     }
 
@@ -245,13 +416,18 @@
     .sort-indicator {
       width: 6px;
       height: 6px;
+
       border-radius: 50%;
+
       background: transparent;
+
       border: 1px solid #555;
+
       flex-shrink: 0;
     }
 
-    .organize-menu button.active-sort .sort-indicator {
+    .organize-menu button.active-sort
+    .sort-indicator {
       background: #fff;
       border-color: #fff;
     }
@@ -262,61 +438,93 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+
+      grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
       gap: 9px;
     }
 
     .card {
       cursor: pointer;
+
       min-width: 0;
+
+      touch-action: manipulation;
     }
 
     .cover {
       width: 100%;
+
       aspect-ratio: 0.68;
+
       object-fit: cover;
+
       display: block;
+
       background: #111;
+
       border-radius: 0;
+
+      pointer-events: none;
     }
 
     .card-name {
       display: none;
     }
 
+    /* =========================
+       LIST VIEW
+    ========================= */
+
     .list-view {
       display: flex;
+
       flex-direction: column;
+
       gap: 8px;
     }
 
     .list-view .card {
       display: flex;
+
       align-items: center;
+
       gap: 12px;
+
       background: #111;
+
       padding: 8px;
+
       border-radius: 8px;
     }
 
     .list-view .cover {
       width: 58px;
       height: 78px;
+
       aspect-ratio: auto;
+
       flex-shrink: 0;
     }
 
     .list-view .card-name {
       display: block;
+
       font-size: 15px;
+
       font-weight: 600;
+
       line-height: 1.3;
     }
 
     .list-view .card-chapters {
       display: block;
+
       color: #888;
+
       font-size: 12px;
+
       margin-top: 5px;
     }
 
@@ -324,10 +532,17 @@
       display: none;
     }
 
+    /* =========================
+       EMPTY
+    ========================= */
+
     .empty {
       color: #666;
+
       text-align: center;
+
       padding: 50px 10px;
+
       font-size: 14px;
     }
 
@@ -337,7 +552,9 @@
 
     .screen {
       display: none;
-      min-height: calc(100vh - 58px);
+
+      min-height:
+        calc(100vh - 58px);
     }
 
     .screen.active {
@@ -346,10 +563,15 @@
 
     .back-button {
       background: transparent;
+
       border: 0;
+
       color: #fff;
+
       font-size: 15px;
+
       padding: 0;
+
       cursor: pointer;
     }
 
@@ -359,39 +581,58 @@
 
     .detail {
       padding: 24px 16px 40px;
+
       max-width: 600px;
+
       margin: 0 auto;
     }
 
     .detail-cover {
       width: 180px;
       height: 265px;
+
       object-fit: cover;
+
       display: block;
+
       margin: 0 auto 22px;
+
+      pointer-events: none;
     }
 
     .detail-title {
       font-size: 25px;
+
       font-weight: 700;
+
       text-align: center;
+
       margin-bottom: 22px;
+
       line-height: 1.15;
     }
 
     .detail-info {
       background: #111;
+
       border: 1px solid #222;
+
       border-radius: 12px;
+
       overflow: hidden;
     }
 
     .info-row {
       display: flex;
+
       justify-content: space-between;
+
       gap: 20px;
+
       padding: 15px;
+
       border-bottom: 1px solid #222;
+
       font-size: 14px;
     }
 
@@ -405,22 +646,31 @@
 
     .info-value {
       color: #fff;
+
       text-align: right;
     }
 
     .detail-actions {
       display: flex;
+
       gap: 10px;
+
       margin-top: 18px;
     }
 
     .action-button {
       flex: 1;
+
       height: 44px;
+
       border-radius: 9px;
+
       border: 1px solid #333;
+
       background: #111;
+
       color: #fff;
+
       cursor: pointer;
     }
 
@@ -434,11 +684,18 @@
 
     .modal-background {
       display: none;
+
       position: fixed;
+
       inset: 0;
-      background: rgba(0, 0, 0, 0.75);
+
+      background:
+        rgba(0, 0, 0, 0.75);
+
       z-index: 100;
+
       align-items: flex-end;
+
       justify-content: center;
     }
 
@@ -448,19 +705,30 @@
 
     .modal {
       width: 100%;
+
       max-width: 600px;
+
       background: #111;
+
       border: 1px solid #292929;
+
       border-bottom: 0;
-      border-radius: 18px 18px 0 0;
+
+      border-radius:
+        18px 18px 0 0;
+
       padding: 20px 16px 28px;
+
       max-height: 90vh;
+
       overflow-y: auto;
     }
 
     .modal-title {
       font-size: 19px;
+
       font-weight: 700;
+
       margin-bottom: 18px;
     }
 
@@ -470,44 +738,67 @@
 
     .field label {
       display: block;
+
       color: #999;
+
       font-size: 12px;
+
       margin-bottom: 7px;
     }
 
     .field input,
     .field select {
       width: 100%;
+
       height: 43px;
+
       background: #000;
+
       border: 1px solid #333;
+
       border-radius: 8px;
+
       color: #fff;
+
       padding: 0 12px;
+
       outline: none;
     }
 
     .cover-preview {
       width: 90px;
       height: 130px;
+
       object-fit: cover;
+
       display: none;
+
       margin-top: 10px;
+
+      pointer-events: none;
     }
 
     .modal-actions {
       display: flex;
+
       gap: 10px;
+
       margin-top: 20px;
     }
 
     .modal-actions button {
       flex: 1;
+
       height: 44px;
+
       border-radius: 9px;
+
       border: 1px solid #333;
+
       background: #000;
+
       color: #fff;
+
       cursor: pointer;
     }
 
@@ -517,6 +808,7 @@
 
     .stats {
       display: none;
+
       padding: 20px 0 40px;
     }
 
@@ -526,20 +818,27 @@
 
     .stat-box {
       background: #111;
+
       border: 1px solid #222;
+
       border-radius: 12px;
+
       padding: 18px;
+
       margin-bottom: 12px;
     }
 
     .stat-number {
       font-size: 28px;
+
       font-weight: 700;
     }
 
     .stat-label {
       color: #777;
+
       font-size: 12px;
+
       margin-top: 4px;
     }
 
@@ -553,24 +852,37 @@
 
     .chart-name {
       font-size: 12px;
+
       margin-bottom: 5px;
+
       white-space: nowrap;
+
       overflow: hidden;
+
       text-overflow: ellipsis;
     }
 
     .bar-background {
       height: 8px;
+
       background: #222;
+
       border-radius: 4px;
+
       overflow: hidden;
     }
 
     .bar {
       height: 100%;
+
       background: #fff;
+
       border-radius: 4px;
     }
+
+    /* =========================
+       DESKTOP
+    ========================= */
 
     @media (min-width: 700px) {
 
@@ -583,12 +895,17 @@
       }
 
     }
+
   </style>
 </head>
 
 <body>
 
 <div class="app">
+
+  <!-- =========================
+       HEADER
+  ========================= -->
 
   <header>
 
@@ -606,7 +923,10 @@
         +
       </button>
 
-      <div id="addMenu" class="add-menu">
+      <div
+        id="addMenu"
+        class="add-menu"
+      >
 
         <button onclick="abrirAdicionar()">
           Add Manhwa
@@ -638,8 +958,15 @@
 
   </header>
 
-  <!-- HOME -->
-  <div id="homeScreen" class="screen active">
+
+  <!-- =========================
+       HOME
+  ========================= -->
+
+  <div
+    id="homeScreen"
+    class="screen active"
+  >
 
     <main class="content">
 
@@ -650,6 +977,7 @@
         placeholder="Search manhwa..."
         oninput="renderizar()"
       >
+
 
       <div class="section-header">
 
@@ -681,6 +1009,7 @@
 
         </div>
 
+
         <button
           class="organize-button"
           onclick="alternarOrganizar()"
@@ -689,6 +1018,11 @@
         </button>
 
       </div>
+
+
+      <!-- =========================
+           SORT MENU
+      ========================= -->
 
       <div
         id="organizeMenu"
@@ -704,9 +1038,12 @@
             Alphabetical order
           </span>
 
-          <span class="sort-indicator"></span>
+          <span
+            class="sort-indicator"
+          ></span>
 
         </button>
+
 
         <button
           id="sortRecent"
@@ -717,9 +1054,12 @@
             Recently added
           </span>
 
-          <span class="sort-indicator"></span>
+          <span
+            class="sort-indicator"
+          ></span>
 
         </button>
+
 
         <button
           id="sortGrid"
@@ -730,9 +1070,12 @@
             Grid view
           </span>
 
-          <span class="sort-indicator"></span>
+          <span
+            class="sort-indicator"
+          ></span>
 
         </button>
+
 
         <button
           id="sortList"
@@ -743,15 +1086,25 @@
             List view
           </span>
 
-          <span class="sort-indicator"></span>
+          <span
+            class="sort-indicator"
+          ></span>
 
         </button>
 
       </div>
 
-      <div id="library" class="grid"></div>
 
-      <div id="empty" class="empty">
+      <div
+        id="library"
+        class="grid"
+      ></div>
+
+
+      <div
+        id="empty"
+        class="empty"
+      >
         No manhwa added yet.
       </div>
 
@@ -759,8 +1112,15 @@
 
   </div>
 
-  <!-- DETAIL -->
-  <div id="detailScreen" class="screen">
+
+  <!-- =========================
+       DETAIL
+  ========================= -->
+
+  <div
+    id="detailScreen"
+    class="screen"
+  >
 
     <header>
 
@@ -773,6 +1133,7 @@
 
     </header>
 
+
     <main class="detail">
 
       <img
@@ -782,10 +1143,12 @@
         alt=""
       >
 
+
       <div
         id="detailTitle"
         class="detail-title"
       ></div>
+
 
       <div class="detail-info">
 
@@ -802,6 +1165,7 @@
 
         </div>
 
+
         <div class="info-row">
 
           <span class="info-label">
@@ -816,6 +1180,7 @@
         </div>
 
       </div>
+
 
       <div class="detail-actions">
 
@@ -839,8 +1204,15 @@
 
   </div>
 
-  <!-- STATISTICS -->
-  <div id="statsScreen" class="screen">
+
+  <!-- =========================
+       STATISTICS
+  ========================= -->
+
+  <div
+    id="statsScreen"
+    class="screen"
+  >
 
     <header>
 
@@ -853,11 +1225,13 @@
 
     </header>
 
+
     <main class="content">
 
       <div class="section-title">
         Statistics
       </div>
+
 
       <div class="stats active">
 
@@ -876,6 +1250,7 @@
 
         </div>
 
+
         <div class="stat-box">
 
           <div
@@ -891,6 +1266,7 @@
 
         </div>
 
+
         <div
           id="chart"
           class="chart"
@@ -904,7 +1280,11 @@
 
 </div>
 
-<!-- MODAL -->
+
+<!-- =========================
+     MODAL
+========================= -->
+
 <div
   id="modalBackground"
   class="modal-background"
@@ -919,6 +1299,7 @@
       Add Manhwa
     </div>
 
+
     <div class="field">
 
       <label>
@@ -932,6 +1313,7 @@
       >
 
     </div>
+
 
     <div class="field">
 
@@ -948,13 +1330,16 @@
 
     </div>
 
+
     <div class="field">
 
       <label>
         Status
       </label>
 
-      <select id="statusInput">
+      <select
+        id="statusInput"
+      >
 
         <option value="Reading">
           Reading
@@ -976,6 +1361,7 @@
 
     </div>
 
+
     <div class="field">
 
       <label>
@@ -989,6 +1375,7 @@
         onchange="mostrarPreview()"
       >
 
+
       <img
         id="coverPreview"
         class="cover-preview"
@@ -997,6 +1384,7 @@
       >
 
     </div>
+
 
     <div class="modal-actions">
 
@@ -1014,22 +1402,38 @@
 
 </div>
 
+
 <script>
+
+  /* =========================
+     DADOS
+  ========================= */
 
   let manhwas = JSON.parse(
     localStorage.getItem("manhwas") || "[]"
   );
 
+
   let ordemManhwas =
-    localStorage.getItem("ordemManhwas") || "original";
+    localStorage.getItem(
+      "ordemManhwas"
+    ) || "original";
+
 
   let visualizacaoManhwas =
-    localStorage.getItem("visualizacaoManhwas") || "grid";
+    localStorage.getItem(
+      "visualizacaoManhwas"
+    ) || "grid";
+
 
   let filtroStatus =
-    localStorage.getItem("filtroStatus") || "all";
+    localStorage.getItem(
+      "filtroStatus"
+    ) || "all";
+
 
   let manhwaAtual = null;
+
   let indiceEdicao = null;
 
 
@@ -1044,15 +1448,18 @@
       JSON.stringify(manhwas)
     );
 
+
     localStorage.setItem(
       "ordemManhwas",
       ordemManhwas
     );
 
+
     localStorage.setItem(
       "visualizacaoManhwas",
       visualizacaoManhwas
     );
+
 
     localStorage.setItem(
       "filtroStatus",
@@ -1063,15 +1470,19 @@
 
 
   /* =========================
-     MENU DO +
+     MENU +
   ========================= */
 
   function alternarAddMenu() {
 
     const menu =
-      document.getElementById("addMenu");
+      document.getElementById(
+        "addMenu"
+      );
 
-    menu.classList.toggle("active");
+    menu.classList.toggle(
+      "active"
+    );
 
   }
 
@@ -1079,8 +1490,12 @@
   function fecharAddMenu() {
 
     document
-      .getElementById("addMenu")
-      .classList.remove("active");
+      .getElementById(
+        "addMenu"
+      )
+      .classList.remove(
+        "active"
+      );
 
   }
 
@@ -1095,10 +1510,12 @@
 
 
   /* =========================
-     FILTRO DE STATUS
+     FILTRO
   ========================= */
 
-  function mudarFiltroStatus(status) {
+  function mudarFiltroStatus(
+    status
+  ) {
 
     filtroStatus =
       status;
@@ -1117,21 +1534,36 @@
   function renderizar() {
 
     const library =
-      document.getElementById("library");
+      document.getElementById(
+        "library"
+      );
+
 
     const empty =
-      document.getElementById("empty");
+      document.getElementById(
+        "empty"
+      );
+
 
     const searchElement =
-      document.getElementById("searchInput");
+      document.getElementById(
+        "searchInput"
+      );
+
 
     const filterElement =
-      document.getElementById("statusFilter");
+      document.getElementById(
+        "statusFilter"
+      );
+
 
     const busca =
       searchElement
-        ? searchElement.value.toLowerCase().trim()
+        ? searchElement.value
+            .toLowerCase()
+            .trim()
         : "";
+
 
     if (filterElement) {
 
@@ -1140,16 +1572,22 @@
 
     }
 
-    let lista = [...manhwas];
+
+    let lista =
+      [...manhwas];
 
 
     /* FILTRO */
 
-    if (filtroStatus !== "all") {
+    if (
+      filtroStatus !== "all"
+    ) {
 
       lista =
-        lista.filter(m =>
-          m.status === filtroStatus
+        lista.filter(
+          m =>
+            m.status ===
+            filtroStatus
         );
 
     }
@@ -1158,21 +1596,27 @@
     /* ORDENAÇÃO */
 
     if (
-      ordemManhwas === "alphabetical"
+      ordemManhwas ===
+      "alphabetical"
     ) {
 
-      lista.sort((a, b) =>
-        a.nome.localeCompare(
-          b.nome,
-          undefined,
-          {
-            sensitivity: "base"
-          }
-        )
+      lista.sort(
+        (a, b) =>
+          a.nome.localeCompare(
+            b.nome,
+            undefined,
+            {
+              sensitivity:
+                "base"
+            }
+          )
       );
 
-    } else if (
-      ordemManhwas === "recent"
+    }
+
+    else if (
+      ordemManhwas ===
+      "recent"
     ) {
 
       lista.reverse();
@@ -1185,90 +1629,132 @@
     if (busca) {
 
       lista =
-        lista.filter(m =>
-          m.nome
-            .toLowerCase()
-            .includes(busca)
+        lista.filter(
+          m =>
+            m.nome
+              .toLowerCase()
+              .includes(busca)
         );
 
     }
 
 
-    library.innerHTML = "";
+    library.innerHTML =
+      "";
 
 
-    if (lista.length === 0) {
+    if (
+      lista.length === 0
+    ) {
 
       empty.style.display =
         "block";
 
-    } else {
+    }
+
+    else {
 
       empty.style.display =
         "none";
 
-      lista.forEach((m) => {
 
-        const index =
-          manhwas.indexOf(m);
+      lista.forEach(
+        m => {
 
-        const card =
-          document.createElement("div");
-
-        card.className =
-          "card";
-
-        card.onclick =
-          function() {
-
-            abrirDetalhes(index);
-
-          };
+          const index =
+            manhwas.indexOf(
+              m
+            );
 
 
-        const img =
-          document.createElement("img");
-
-        img.className =
-          "cover";
-
-        img.src =
-          m.capa || "";
-
-        img.alt =
-          m.nome;
+          const card =
+            document.createElement(
+              "div"
+            );
 
 
-        const name =
-          document.createElement("div");
-
-        name.className =
-          "card-name";
-
-        name.textContent =
-          m.nome;
+          card.className =
+            "card";
 
 
-        const chapters =
-          document.createElement("div");
+          card.onclick =
+            function() {
 
-        chapters.className =
-          "card-chapters";
+              abrirDetalhes(
+                index
+              );
 
-        chapters.textContent =
-          m.capitulos +
-          " chapters";
+            };
 
 
-        card.appendChild(img);
+          const img =
+            document.createElement(
+              "img"
+            );
 
-        card.appendChild(name);
 
-        card.appendChild(chapters);
+          img.className =
+            "cover";
 
-        library.appendChild(card);
 
-      });
+          img.src =
+            m.capa || "";
+
+
+          img.alt =
+            m.nome;
+
+
+          const name =
+            document.createElement(
+              "div"
+            );
+
+
+          name.className =
+            "card-name";
+
+
+          name.textContent =
+            m.nome;
+
+
+          const chapters =
+            document.createElement(
+              "div"
+            );
+
+
+          chapters.className =
+            "card-chapters";
+
+
+          chapters.textContent =
+            m.capitulos +
+            " chapters";
+
+
+          card.appendChild(
+            img
+          );
+
+
+          card.appendChild(
+            name
+          );
+
+
+          card.appendChild(
+            chapters
+          );
+
+
+          library.appendChild(
+            card
+          );
+
+        }
+      );
 
     }
 
@@ -1276,22 +1762,27 @@
     /* VISUALIZAÇÃO */
 
     if (
-      visualizacaoManhwas === "list"
+      visualizacaoManhwas ===
+      "list"
     ) {
 
       library.classList.remove(
         "grid"
       );
 
+
       library.classList.add(
         "list-view"
       );
 
-    } else {
+    }
+
+    else {
 
       library.classList.remove(
         "list-view"
       );
+
 
       library.classList.add(
         "grid"
@@ -1306,7 +1797,7 @@
 
 
   /* =========================
-     DESTAQUES DO SORT
+     DESTAQUES SORT
   ========================= */
 
   function atualizarDestaquesSort() {
@@ -1316,15 +1807,18 @@
         "sortAlphabetical"
       );
 
+
     const recent =
       document.getElementById(
         "sortRecent"
       );
 
+
     const grid =
       document.getElementById(
         "sortGrid"
       );
+
 
     const list =
       document.getElementById(
@@ -1336,7 +1830,9 @@
 
       alphabetical.classList.toggle(
         "active-sort",
-        ordemManhwas === "alphabetical"
+
+        ordemManhwas ===
+        "alphabetical"
       );
 
     }
@@ -1346,7 +1842,9 @@
 
       recent.classList.toggle(
         "active-sort",
-        ordemManhwas === "recent"
+
+        ordemManhwas ===
+        "recent"
       );
 
     }
@@ -1356,7 +1854,9 @@
 
       grid.classList.toggle(
         "active-sort",
-        visualizacaoManhwas === "grid"
+
+        visualizacaoManhwas ===
+        "grid"
       );
 
     }
@@ -1366,7 +1866,9 @@
 
       list.classList.toggle(
         "active-sort",
-        visualizacaoManhwas === "list"
+
+        visualizacaoManhwas ===
+        "list"
       );
 
     }
@@ -1385,10 +1887,15 @@
         "organizeMenu"
       );
 
+
     menu.style.display =
-      menu.style.display === "block"
+      menu.style.display ===
+      "block"
+
         ? "none"
+
         : "block";
+
 
     atualizarDestaquesSort();
 
@@ -1399,6 +1906,7 @@
 
     ordemManhwas =
       "alphabetical";
+
 
     salvarDados();
 
@@ -1412,6 +1920,7 @@
     ordemManhwas =
       "recent";
 
+
     salvarDados();
 
     renderizar();
@@ -1419,10 +1928,13 @@
   }
 
 
-  function mudarVisualizacao(tipo) {
+  function mudarVisualizacao(
+    tipo
+  ) {
 
     visualizacaoManhwas =
       tipo;
+
 
     salvarDados();
 
@@ -1435,35 +1947,43 @@
      MODAL
   ========================= */
 
-  function abrirModal(indice = null) {
+  function abrirModal(
+    indice = null
+  ) {
 
     indiceEdicao =
       indice;
+
 
     const modal =
       document.getElementById(
         "modalBackground"
       );
 
+
     const title =
       document.getElementById(
         "modalTitle"
       );
+
 
     const nameInput =
       document.getElementById(
         "nameInput"
       );
 
+
     const chaptersInput =
       document.getElementById(
         "chaptersInput"
       );
 
+
     const statusInput =
       document.getElementById(
         "statusInput"
       );
+
 
     const preview =
       document.getElementById(
@@ -1471,19 +1991,25 @@
       );
 
 
-    if (indice !== null) {
+    if (
+      indice !== null
+    ) {
 
       const m =
         manhwas[indice];
 
+
       title.textContent =
         "Edit Manhwa";
+
 
       nameInput.value =
         m.nome;
 
+
       chaptersInput.value =
         m.capitulos;
+
 
       statusInput.value =
         m.status;
@@ -1494,32 +2020,42 @@
         preview.src =
           m.capa;
 
+
         preview.style.display =
           "block";
 
-      } else {
+      }
+
+      else {
 
         preview.style.display =
           "none";
 
       }
 
-    } else {
+    }
+
+    else {
 
       title.textContent =
         "Add Manhwa";
 
+
       nameInput.value =
         "";
+
 
       chaptersInput.value =
         0;
 
+
       statusInput.value =
         "Reading";
 
+
       preview.src =
         "";
+
 
       preview.style.display =
         "none";
@@ -1544,11 +2080,14 @@
         "active"
       );
 
+
     document
       .getElementById(
         "coverInput"
       )
-      .value = "";
+      .value =
+      "";
+
 
     indiceEdicao =
       null;
@@ -1562,6 +2101,7 @@
       document.getElementById(
         "coverInput"
       );
+
 
     const preview =
       document.getElementById(
@@ -1588,6 +2128,7 @@
 
         preview.src =
           e.target.result;
+
 
         preview.style.display =
           "block";
@@ -1623,7 +2164,8 @@
           .getElementById(
             "chaptersInput"
           )
-          .value || 0
+          .value ||
+          0
       );
 
 
@@ -1652,7 +2194,9 @@
     }
 
 
-    function finalizar(capa) {
+    function finalizar(
+      capa
+    ) {
 
       const novoManhwa = {
 
@@ -1672,7 +2216,8 @@
 
 
       if (
-        indiceEdicao !== null
+        indiceEdicao !==
+        null
       ) {
 
         manhwas[
@@ -1680,7 +2225,9 @@
         ] =
           novoManhwa;
 
-      } else {
+      }
+
+      else {
 
         manhwas.push(
           novoManhwa
@@ -1721,19 +2268,23 @@
         coverInput.files[0]
       );
 
+    }
 
-    } else if (
-      indiceEdicao !== null
+    else if (
+      indiceEdicao !==
+      null
     ) {
 
       finalizar(
         manhwas[
           indiceEdicao
-        ].capa || ""
+        ].capa ||
+        ""
       );
 
+    }
 
-    } else {
+    else {
 
       finalizar("");
 
@@ -1746,10 +2297,13 @@
      DETALHES
   ========================= */
 
-  function abrirDetalhes(indice) {
+  function abrirDetalhes(
+    indice
+  ) {
 
     manhwaAtual =
       indice;
+
 
     const m =
       manhwas[indice];
@@ -1859,12 +2413,14 @@
   function editarAtual() {
 
     if (
-      manhwaAtual === null
+      manhwaAtual ===
+      null
     ) {
 
       return;
 
     }
+
 
     abrirModal(
       manhwaAtual
@@ -1876,7 +2432,8 @@
   function excluirAtual() {
 
     if (
-      manhwaAtual === null
+      manhwaAtual ===
+      null
     ) {
 
       return;
@@ -1923,6 +2480,7 @@
 
     fecharAddMenu();
 
+
     document
       .getElementById(
         "organizeMenu"
@@ -1933,10 +2491,14 @@
 
     const total =
       manhwas.reduce(
-        (soma, m) =>
+        (
+          soma,
+          m
+        ) =>
           soma +
           Number(
-            m.capitulos || 0
+            m.capitulos ||
+            0
           ),
         0
       );
@@ -1973,7 +2535,8 @@
         ...manhwas.map(
           m =>
             Number(
-              m.capitulos || 0
+              m.capitulos ||
+              0
             )
         ),
         1
@@ -1988,6 +2551,7 @@
             "div"
           );
 
+
         row.className =
           "chart-row";
 
@@ -1997,8 +2561,10 @@
             "div"
           );
 
+
         name.className =
           "chart-name";
+
 
         name.textContent =
           m.nome;
@@ -2009,6 +2575,7 @@
             "div"
           );
 
+
         background.className =
           "bar-background";
 
@@ -2018,6 +2585,7 @@
             "div"
           );
 
+
         bar.className =
           "bar";
 
@@ -2025,7 +2593,8 @@
         bar.style.width =
           (
             Number(
-              m.capitulos || 0
+              m.capitulos ||
+              0
             )
             /
             maior
@@ -2043,6 +2612,7 @@
         row.appendChild(
           name
         );
+
 
         row.appendChild(
           background
@@ -2107,7 +2677,8 @@
         1,
 
       data:
-        new Date().toISOString(),
+        new Date()
+          .toISOString(),
 
       manhwas:
         manhwas,
@@ -2211,7 +2782,9 @@
   }
 
 
-  function restaurarBackup(event) {
+  function restaurarBackup(
+    event
+  ) {
 
     const arquivo =
       event.target.files[0];
@@ -2296,8 +2869,11 @@
             "Backup restored successfully."
           );
 
+        }
 
-        } catch (erro) {
+        catch (
+          erro
+        ) {
 
           alert(
             "Could not read the backup file."
@@ -2345,14 +2921,42 @@
 
 
   /* =========================
+     BLOQUEAR MENU DE CONTEXTO
+     NO SITE
+  ========================= */
+
+  document.addEventListener(
+    "contextmenu",
+    function(event) {
+
+      if (
+        !event.target.matches(
+          "input, textarea, select"
+        )
+      ) {
+
+        event.preventDefault();
+
+      }
+
+    }
+  );
+
+
+  /* =========================
      INICIALIZAÇÃO
   ========================= */
 
   renderizar();
 
 
+  /* =========================
+     SERVICE WORKER
+  ========================= */
+
   if (
-    "serviceWorker" in navigator
+    "serviceWorker" in
+    navigator
   ) {
 
     window.addEventListener(
@@ -2363,6 +2967,7 @@
           .register(
             "./service-worker.js"
           )
+
           .then(
             function() {
 
@@ -2372,6 +2977,7 @@
 
             }
           )
+
           .catch(
             function(error) {
 
